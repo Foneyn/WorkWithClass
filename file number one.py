@@ -1,50 +1,82 @@
-class User:
-    def __init__(self, user_id, name, access_level='user'):
-        self.__user_id = user_id
-        self.__name = name
-        self.__access_level = access_level
+class Animal:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
 
-    def get_user_id(self):
-        return self.__user_id
+    def make_sound(self):
+        pass
 
-    def get_name(self):
-        return self.__name
+    def eat(self):
+        print(f"{self.name} is eating.")
 
-    def get_access_level(self):
-        return self.__access_level
+class Bird(Animal):
+    def __init__(self, name, age, species):
+        super().__init__(name, age)
+        self.species = species
 
+    def make_sound(self):
+        print(f"{self.name} the {self.species} chirps.")
 
-class Admin(User):
-    def __init__(self, user_id, name, access_level='admin'):
-        super().__init__(user_id, name, access_level)
-        self.__users = []
+class Mammal(Animal):
+    def __init__(self, name, age, species):
+        super().__init__(name, age)
+        self.species = species
 
-    def add_user(self, user):
-        self.__users.append(user)
+    def make_sound(self):
+        print(f"{self.name} the {self.species} makes a mammal sound.")
 
-    def remove_user(self, user):
-        if user in self.__users:
-            self.__users.remove(user)
-        else:
-            print("User not found in the list.")
+class Reptile(Animal):
+    def __init__(self, name, age, species):
+        super().__init__(name, age)
+        self.species = species
 
-    def get_users(self):
-        return self.__users
+    def make_sound(self):
+        print(f"{self.name} the {self.species} hisses.")
 
+def animal_sound(animals):
+    for animal in animals:
+        animal.make_sound()
 
-# Пример использования
-user1 = User(1, "Alice")
-user2 = User(2, "Bob")
-user3 = User(3, "Eve")
+class Zoo:
+    def __init__(self):
+        self.animals = []
+        self.staff = []
 
-admin = Admin(0, "Admin")
+    def add_animal(self, animal):
+        self.animals.append(animal)
 
-admin.add_user(user1)
-admin.add_user(user2)
-admin.add_user(user3)
+    def add_staff(self, staff):
+        self.staff.append(staff)
 
-admin.remove_user(user2)
+class ZooKeeper:
+    def __init__(self, name):
+        self.name = name
 
-print("Admin users:")
-for user in admin.get_users():
-    print(user.get_name())
+    def feed_animal(self, animal):
+        print(f"{self.name} is feeding {animal.name}.")
+
+class Veterinarian:
+    def __init__(self, name):
+        self.name = name
+
+    def heal_animal(self, animal):
+        print(f"{self.name} is healing {animal.name}.")
+
+# Пример использования классов
+bird1 = Bird("Sparrow", 2, "Sparrow")
+mammal1 = Mammal("Tiger", 5, "Tiger")
+reptile1 = Reptile("Snake", 3, "Snake")
+
+zookeeper = ZooKeeper("John")
+veterinarian = Veterinarian("Alice")
+
+zoo = Zoo()
+zoo.add_animal(bird1)
+zoo.add_animal(mammal1)
+zoo.add_animal(reptile1)
+zoo.add_staff(zookeeper)
+zoo.add_staff(veterinarian)
+
+animal_sound(zoo.animals)
+zookeeper.feed_animal(bird1)
+veterinarian.heal_animal(mammal1)
