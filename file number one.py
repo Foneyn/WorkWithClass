@@ -1,82 +1,66 @@
-class Animal:
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
+from abc import ABC, abstractmethod
 
-    def make_sound(self):
+# Шаг 1: Создайте абстрактный класс для оружия
+class Weapon(ABC):
+    @abstractmethod
+    def attack(self):
         pass
 
-    def eat(self):
-        print(f"{self.name} is eating.")
+# Шаг 2: Реализуйте конкретные типы оружия
+class Sword(Weapon):
+    def attack(self):
+        return "Боец наносит удар мечом."
 
-class Bird(Animal):
-    def __init__(self, name, age, species):
-        super().__init__(name, age)
-        self.species = species
+class Bow(Weapon):
+    def attack(self):
+        return "Боец наносит удар из лука."
 
-    def make_sound(self):
-        print(f"{self.name} the {self.species} chirps.")
+# Шаг 3: Модифицируйте класс Fighter
+class Fighter:
+    def __init__(self, name):
+        self.name = name
+        self.weapon = None
 
-class Mammal(Animal):
-    def __init__(self, name, age, species):
-        super().__init__(name, age)
-        self.species = species
+    def changeWeapon(self, weapon: Weapon):
+        self.weapon = weapon
 
-    def make_sound(self):
-        print(f"{self.name} the {self.species} makes a mammal sound.")
+    def attack(self):
+        if self.weapon:
+            return self.weapon.attack()
+        else:
+            return "Боец без оружия."
 
-class Reptile(Animal):
-    def __init__(self, name, age, species):
-        super().__init__(name, age)
-        self.species = species
-
-    def make_sound(self):
-        print(f"{self.name} the {self.species} hisses.")
-
-def animal_sound(animals):
-    for animal in animals:
-        animal.make_sound()
-
-class Zoo:
-    def __init__(self):
-        self.animals = []
-        self.staff = []
-
-    def add_animal(self, animal):
-        self.animals.append(animal)
-
-    def add_staff(self, staff):
-        self.staff.append(staff)
-
-class ZooKeeper:
+# Класс Monster для демонстрации боя
+class Monster:
     def __init__(self, name):
         self.name = name
 
-    def feed_animal(self, animal):
-        print(f"{self.name} is feeding {animal.name}.")
+def main():
+    fighter = Fighter("Боец")
+    monster = Monster("Монстр")
 
-class Veterinarian:
-    def __init__(self, name):
-        self.name = name
+    # Боец выбирает меч
+    sword = Sword()
+    fighter.changeWeapon(sword)
+    print(fighter.attack())
+    print(f"{monster.name} побежден!\n")
 
-    def heal_animal(self, animal):
-        print(f"{self.name} is healing {animal.name}.")
+    # Боец выбирает лук
+    bow = Bow()
+    fighter.changeWeapon(bow)
+    print(fighter.attack())
+    print(f"{monster.name} побежден!\n")
 
-# Пример использования классов
-bird1 = Bird("Sparrow", 2, "Sparrow")
-mammal1 = Mammal("Tiger", 5, "Tiger")
-reptile1 = Reptile("Snake", 3, "Snake")
+    # Добавление нового типа оружия
+    class Axe(Weapon):
+        def attack(self):
+            return "Боец наносит удар топором."
 
-zookeeper = ZooKeeper("John")
-veterinarian = Veterinarian("Alice")
+    # Боец выбирает топор
+    axe = Axe()
+    fighter.changeWeapon(axe)
+    print(fighter.attack())
+    print(f"{monster.name} побежден!\n")
 
-zoo = Zoo()
-zoo.add_animal(bird1)
-zoo.add_animal(mammal1)
-zoo.add_animal(reptile1)
-zoo.add_staff(zookeeper)
-zoo.add_staff(veterinarian)
-
-animal_sound(zoo.animals)
-zookeeper.feed_animal(bird1)
-veterinarian.heal_animal(mammal1)
+if __name__ == "__main__":
+    main()
