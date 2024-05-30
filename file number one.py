@@ -1,66 +1,53 @@
-from abc import ABC, abstractmethod
+import random
 
-# Шаг 1: Создайте абстрактный класс для оружия
-class Weapon(ABC):
-    @abstractmethod
-    def attack(self):
-        pass
 
-# Шаг 2: Реализуйте конкретные типы оружия
-class Sword(Weapon):
-    def attack(self):
-        return "Боец наносит удар мечом."
-
-class Bow(Weapon):
-    def attack(self):
-        return "Боец наносит удар из лука."
-
-# Шаг 3: Модифицируйте класс Fighter
-class Fighter:
-    def __init__(self, name):
+class Hero:
+    def __init__(self, name, health=100, attack_power=20):
         self.name = name
-        self.weapon = None
+        self.health = health
+        self.attack_power = attack_power
 
-    def changeWeapon(self, weapon: Weapon):
-        self.weapon = weapon
+    def attack(self, other):
+        damage = self.attack_power
+        other.health -= damage
+        print(f"{self.name} атакует {other.name} и наносит {damage} урона.")
 
-    def attack(self):
-        if self.weapon:
-            return self.weapon.attack()
+    def is_alive(self):
+        return self.health > 0
+
+
+class Game:
+    def __init__(self, player_name):
+        self.player = Hero(player_name)
+        self.computer = Hero("Компьютер")
+
+    def start(self):
+        print("Игра начинается!")
+        while self.player.is_alive() and self.computer.is_alive():
+            self.player_turn()
+            if self.computer.is_alive():
+                self.computer_turn()
+
+        if self.player.is_alive():
+            print("Игрок победил!")
         else:
-            return "Боец без оружия."
+            print("Компьютер победил!")
 
-# Класс Monster для демонстрации боя
-class Monster:
-    def __init__(self, name):
-        self.name = name
+    def player_turn(self):
+        print("\nХод игрока:")
+        self.player.attack(self.computer)
+        self.print_status()
 
-def main():
-    fighter = Fighter("Боец")
-    monster = Monster("Монстр")
+    def computer_turn(self):
+        print("\nХод компьютера:")
+        self.computer.attack(self.player)
+        self.print_status()
 
-    # Боец выбирает меч
-    sword = Sword()
-    fighter.changeWeapon(sword)
-    print(fighter.attack())
-    print(f"{monster.name} побежден!\n")
-
-    # Боец выбирает лук
-    bow = Bow()
-    fighter.changeWeapon(bow)
-    print(fighter.attack())
-    print(f"{monster.name} побежден!\n")
-
-    # Добавление нового типа оружия
-    class Axe(Weapon):
-        def attack(self):
-            return "Боец наносит удар топором."
-
-    # Боец выбирает топор
-    axe = Axe()
-    fighter.changeWeapon(axe)
-    print(fighter.attack())
-    print(f"{monster.name} побежден!\n")
+    def print_status(self):
+        print(f"{self.player.name} здоровье: {self.player.health}")
+        print(f"{self.computer.name} здоровье: {self.computer.health}")
 
 if __name__ == "__main__":
-    main()
+    player_name = input("Введите имя вашего героя: ")
+    game = Game(player_name)
+    game.start()
